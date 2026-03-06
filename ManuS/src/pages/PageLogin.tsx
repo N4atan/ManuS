@@ -1,13 +1,13 @@
-import FormService from "../components/Forms/FormService";
-import { readServices } from "../services/apiServices";
+
+import FormLogin from "../components/Forms/FormLogin";
+
+
 
 
 export default function PageLogin() {
     return (
         <>
-        
-
-        <FormService isEditing={false} />
+            <FormLogin />
         </>
     );
 }

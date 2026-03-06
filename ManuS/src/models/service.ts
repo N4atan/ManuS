@@ -2,7 +2,7 @@ type serviceStatus = "open" | "closed" | "in_progress";
 type serviceUnit = "Senac Centro" | "Senac Unisinos";
 
 export type Service = {
-    id              : number | string;
+    id              : string;
     title           : string;
     description     : string;
     deadline        : string;

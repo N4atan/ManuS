@@ -16,8 +16,8 @@ export const readServices = async () => {
         const data = doc.data();
 
         return {
-            ...data,
-            id: doc.id
+            id: doc.id,
+            ...data
         } as Service;
     });
 
