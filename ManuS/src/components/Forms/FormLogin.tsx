@@ -26,7 +26,7 @@ export default function FormLogin() {
                 </fieldset>
 
                 <div className="justify-end card-actions mt-5">
-                    <button className="btn btn-primary" onClick={() => login(email)}>
+                    <button type="button" className="btn btn-primary" onClick={() => login(email)}>
                         Entrar
                     </button>
                 </div>

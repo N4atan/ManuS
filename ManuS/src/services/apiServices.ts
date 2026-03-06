@@ -1,21 +1,26 @@
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 import type { Service } from "../models/service";
 
 export const readServices = async () => {
-    const querySnapshot = await getDocs(collection(db, "services"));
+    try {
+        const querySnapshot = await getDocs(collection(db, "services"));
 
-    const servicesList: Service[] = querySnapshot.docs.map(doc => {
-        const data = doc.data();
+        const servicesList: Service[] = querySnapshot.docs.map(doc => {
+            const data = doc.data();
 
-        return {
-            id: doc.id,
-            ...data
-        } as Service;
-    });
+            return {
+                id: doc.id,
+                ...data
+            } as Service;
+        });
 
-    return servicesList;
+        return servicesList;
+    } catch (error) {
+        console.error("Error creating service:", error);
+        throw error;
+    }
 }
 
 export const createService = async (service: Partial<Service>) => {
@@ -25,5 +30,18 @@ export const createService = async (service: Partial<Service>) => {
         console.log("Service created with ID: ", docRef.id);
     } catch (error) {
         console.error("Error creating service:", error);
+        throw error;
     }
 }
+
+
+export const updateService = async (id: string, service: Partial<Service>) => {
+    try {
+        const docRef = doc(db, "services", id);
+
+        await updateDoc(docRef, service);
+    } catch (error) {
+        console.error("Error updating service:", error);
+        throw error;
+    }
+};

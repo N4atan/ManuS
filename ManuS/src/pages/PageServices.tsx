@@ -1,111 +1,178 @@
 
 import { useEffect, useState } from "react";
-import type { Service } from "../models/service";
+import type { Service, ServiceStatusType } from "../models/service";
 import { ServiceStatus } from "../models/service";
 import { readServices } from "../services/apiServices";
 import { CardService } from '../components/Cards/CardService';
 import FormServiceCreate from '../components/Forms/FormServiceCreate';
 import FormServiceEdit from '../components/Forms/FormServiceEdit';
 import { ListHeader } from '../components/ListHeader/ListHeader';
+import { faCircleCheck, faNoteSticky, faPenToSquare, } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAuth } from "../contexts/AuthContext";
+import { Navigate } from "react-router";
 
 export default function PageServices() {
     const [services, setServices] = useState<Service[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [selectedService, setSelectedService] = useState<Service | undefined>(undefined);
+    const [tempStatus, setTempStatus] = useState<ServiceStatusType | undefined>(undefined);
+    const [tabMobile, setTabMobile] = useState<ServiceStatusType>(ServiceStatus.Open);
+    const { user } = useAuth();
+
+
+    const loadData = async () => {
+        try {
+            setLoading(true);
+
+            const tempData = await readServices();
+
+            setServices(tempData);
+
+        } catch (error) {
+            alert(error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                setLoading(true);
-
-                const tempData = await readServices();
-
-                setServices(tempData);
-
-            } catch (error) {
-                alert(error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
         loadData()
     }, [])
 
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    const onReset = () => {
+        setSelectedService(undefined);
+        loadData();
+    }
+
+
+    const showModalCreate = (status: ServiceStatusType) => {
+        setTempStatus(status);
+        (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal();
+    }
+
     return (
-        <div className="p-5">
-            <h1 className="text-2xl font-bold">
-                Serviços
-            </h1>
+        <>
+            <div className="p-5">
 
-            {loading ? (
-                <p>Carregando...</p>
-            ) : (
-                <div className="grid grid-cols-3 justify-items-center">
-                    <ul className="list bg-base-100 gap-5">
-                        <ListHeader 
-                            title="Lista de Pendência" 
-                            status={ServiceStatus.Open}
-                            onAddClick={() => (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal()}
-                        />
-
-
-                        {services.filter(service => service.status === ServiceStatus.Open).map(service => (
-                            <li key={service.id} className="list-tem ">
-                                <CardService 
-                                    service={service}
-                                    onEdit={(s) => setSelectedService(s)}
-                                />
-                            </li>
-                        ))}
-
-                    </ul>
-
-                    <ul className="list bg-base-100 gap-5">
-                        <ListHeader 
-                            title="Em andamento" 
-                            status={ServiceStatus.InProgress}
-                            onAddClick={() => (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal()}
-                        />
-
-                        {services.filter(service => service.status === ServiceStatus.InProgress).map(service => (
-                            <li key={service.id} className="list-tem ">
-                                <CardService 
-                                    service={service}
-                                    onEdit={(s) => setSelectedService(s)}
-                                />
-                            </li>
-                        ))}
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center pt-10 gap-4">
+                        <div className="skeleton h-32 w-96"></div>
+                        <div className="skeleton h-32 w-96"></div>
+                        <div className="skeleton h-32 w-96"></div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-4">
+                        <ul className="hidden lg:block list bg-base-100 gap-12 w-96">
+                            <ListHeader
+                                title="Lista de Pendência"
+                                status={ServiceStatus.Open}
+                                onAddClick={() => showModalCreate(ServiceStatus.Open)}
+                            />
 
 
-                    </ul>
+                            {services.filter(service => service.status === ServiceStatus.Open).map(service => (
+                                <li key={service.id} className="list-item mb-4">
+                                    <CardService
+                                        service={service}
+                                        onEdit={(s) => setSelectedService(s)}
+                                    />
+                                </li>
+                            ))}
 
-                    <ul className="list bg-base-100 gap-5">
-                        <ListHeader 
-                            title="Concluído" 
-                            status={ServiceStatus.Closed}
-                            onAddClick={() => (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal()}
-                        />
-
-                        {services.filter(service => service.status === ServiceStatus.Closed).map(service => (
-                            <li key={service.id} className="list-tem ">
-                                <CardService 
-                                    service={service}
-                                    onEdit={(s) => setSelectedService(s)}
-                                />
-                            </li>
-                        ))}
+                        </ul>
 
 
-                    </ul>
+
+                        <ul className="hidden lg:block list bg-base-100 gap-12 w-96">
+                            <ListHeader
+                                title="Em andamento"
+                                status={ServiceStatus.InProgress}
+                                onAddClick={() => showModalCreate(ServiceStatus.InProgress)}
+                            />
+
+                            {services.filter(service => service.status === ServiceStatus.InProgress).map(service => (
+                                <li key={service.id} className="list-item mb-4">
+                                    <CardService
+                                        service={service}
+                                        onEdit={(s) => setSelectedService(s)}
+                                    />
+                                </li>
+                            ))}
 
 
-                </div>
-            )}
+                        </ul>
 
-            <FormServiceCreate />
-            <FormServiceEdit service={selectedService} onClose={() => setSelectedService(undefined)} />
-        </div>
+
+
+                        <ul className="hidden lg:block list bg-base-100 gap-12 w-96">
+                            <ListHeader
+                                title="Concluído"
+                                status={ServiceStatus.Closed}
+                                onAddClick={() => showModalCreate(ServiceStatus.Closed)}
+                            />
+
+                            {services.filter(service => service.status === ServiceStatus.Closed).map(service => (
+                                <li key={service.id} className="list-item mb-4">
+                                    <CardService
+                                        service={service}
+                                        onEdit={(s) => setSelectedService(s)}
+                                    />
+                                </li>
+                            ))}
+
+
+                        </ul>
+
+                        <ul className="lg:hidden block list bg-base-100 gap-16 w-96">
+                            <ListHeader
+                                title={tabMobile === ServiceStatus.Open ? "Pendentes" : tabMobile === ServiceStatus.InProgress ? "Em Andamento" : "Concluídos"}
+                                status={tabMobile}
+                                onAddClick={() => showModalCreate(tabMobile)}
+                            />
+
+
+                            {services.filter(service => service.status === tabMobile).map(service => (
+                                <li key={service.id} className="list-item mb-6">
+                                    <CardService
+                                        service={service}
+                                        onEdit={(s) => setSelectedService(s)}
+                                    />
+                                </li>
+                            ))}
+
+                        </ul>
+                    </div>
+                )}
+
+
+            </div>
+            <div className="dock lg:hidden">
+                <button onClick={() => setTabMobile(ServiceStatus.Open)} className={tabMobile === ServiceStatus.Open ? "dock-active" : ""}>
+                    <FontAwesomeIcon icon={faNoteSticky} className="size-[1.2em]" />
+                    <span className="dock-label">Pendentes</span>
+                </button>
+
+                <button onClick={() => setTabMobile(ServiceStatus.InProgress)} className={tabMobile === ServiceStatus.InProgress ? "dock-active" : ""}>
+                    <FontAwesomeIcon icon={faPenToSquare} className="size-[1.2em]" />
+                    <span className="dock-label">Em Andamento</span>
+                </button>
+
+                <button onClick={() => setTabMobile(ServiceStatus.Closed)} className={tabMobile === ServiceStatus.Closed ? "dock-active" : ""}>
+
+                    <FontAwesomeIcon icon={faCircleCheck} className="size-[1.2em]" />
+                    <span className="dock-label">Concluídos</span>
+                </button>
+            </div>
+
+            <FormServiceCreate status={tempStatus!} onReset={() => { setTempStatus(undefined); loadData(); }} />
+            <FormServiceEdit service={selectedService} onClose={() => setSelectedService(undefined)} onReset={onReset} />
+
+        </>
     )
 
 }

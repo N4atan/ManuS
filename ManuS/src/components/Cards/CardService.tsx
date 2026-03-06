@@ -5,17 +5,22 @@ import { faCalendarDays } from '@fortawesome/free-regular-svg-icons'
 type Props = {
     service: Service;
     onEdit?: (service: Service) => void;
+
 }
 
 export const CardService = ({ service, onEdit }: Props) => (
-    <div 
-        className="card bg-base-100 border border-base-300 w-96 shadow-sm rounded-field cursor-pointer hover:shadow-lg transition-shadow"
+    <div
+        className="card bg-base-100 border border-base-300 max-w-96 shadow-sm rounded-field cursor-pointer hover:shadow-lg transition-shadow"
         onClick={() => onEdit?.(service)}
     >
         <div className="card-body">
             <div>
-                <div className="badge badge-secondary mr-5">{service.location}</div>
-                <div className="badge badge-primary">{service.unit}</div>
+                <div className="badge badge-outline badge-primary mr-5">{service.location}</div>
+                {service.unit === "Senac Centro" ? (
+                    <div className="badge badge-primary">Senac Centro</div>
+                ) : (
+                    <div className="badge badge-secondary">Senac Unisinos</div>
+                )}
             </div>
 
             <h2 className="card-title text-xl">
@@ -30,7 +35,7 @@ export const CardService = ({ service, onEdit }: Props) => (
                 <div className="flex items-center justify-center gap-2 opacity-80">
                     <FontAwesomeIcon icon={faCalendarDays} className="text-base" />
                     <p className="text-sm">
-                        {service.deadline}
+                        {service.status !== 'closed' ? service.deadline?.split('-').reverse().join('/') : service.closed_at?.split('-').reverse().join('/')}
                     </p>
                 </div>
 

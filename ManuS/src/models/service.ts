@@ -12,7 +12,7 @@ export type Service = {
     id              : string;
     title           : string;
     description     : string;
-    deadline        : string;
+    deadline        : string | null;
     unit            : serviceUnit;
     location        : string;
     status          : ServiceStatusType;
@@ -20,5 +20,5 @@ export type Service = {
     opened_by       : string | null;
     closed_by       : string | null;
     created_at      : string;
-    closed_at       : string;
+    closed_at       : string | null;
 }

@@ -10,7 +10,7 @@ export const serviceCreateSchema = z.object({
     // datas são strings para evitar conflitos de serialização
     deadline: z.string().optional(),
 
-    unit: z.string().min(1, "A unidade (unidade Senac) é obrigatória"),
+    unit: z.enum(["Senac Centro", "Senac Unisinos"]),
     location: z.string().min(1, "O local (sala/setor) é obrigatório"),
 
     status: z.enum(["open", "in_progress", "closed"]).default("open"),

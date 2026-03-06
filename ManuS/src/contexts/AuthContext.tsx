@@ -1,6 +1,8 @@
 import React from "react";
 import type { User } from "../models/user";
 import { readUserByEmail } from "../services/apiUsers";
+import { useNavigate } from "react-router";
+import toast from 'react-hot-toast';
 
 
 
@@ -25,26 +27,37 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
     const [user, setUser] = React.useState<User | null>(null);
+    const navigate = useNavigate();
 
 
     const login = async (email: string) => {
-        if (isAuthenticated) {
-            console.warn("User is already authenticated");
-            return;
-        }
-        const tempUser = await readUserByEmail(email);
-        
-        if (!tempUser) {
-            throw new Error("User not found");
-        }
+        try {
+            if (isAuthenticated) {
+                console.warn("User is already authenticated");
+                return;
+            }
+            const tempUser = await readUserByEmail(email);
 
-        setUser(tempUser);
-        setIsAuthenticated(true);
+            if (!tempUser) {
+                toast.error("Usuário não encontrado. Por favor, entre em contato com a equipe de suporte.");
+                return;
+            }
+
+            setUser(tempUser);
+            setIsAuthenticated(true);
+            toast.success('Login realizado com sucesso');
+            navigate('/services');
+        } catch (error) {
+            console.error("Login error:", error);
+            throw error;
+        }
     }
 
     const logout = () => {
         setUser(null);
         setIsAuthenticated(false);
+        toast('Logout efetuado', { icon: '👋' });
+        navigate('/login');
     }
 
     const value: AuthContextProps = {

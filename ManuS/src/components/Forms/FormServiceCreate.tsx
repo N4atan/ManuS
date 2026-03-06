@@ -3,8 +3,12 @@ import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import "cally";
 import { serviceCreateSchema } from "../../validation/service";
+import type { ServiceStatusType } from "../../models/service";
+import { createService } from "../../services/apiServices";
+import toast from 'react-hot-toast';
 
-export default function FormServiceCreate() {
+
+export default function FormServiceCreate({ status, onReset }: { status: ServiceStatusType; onReset?: () => void }) {
     const {
         control,
         handleSubmit,
@@ -17,22 +21,24 @@ export default function FormServiceCreate() {
             title: '',
             description: '',
             deadline: '',
-            unit: '',
+            unit: undefined,
             location: '',
             opened_by: '',
-            status: 'open'
+            status: status
         }
     });
 
     const onSubmit = async (data: z.infer<typeof serviceCreateSchema>) => {
         try {
             console.log('novo chamado', data);
-            alert("Chamado criado com sucesso");
+            await createService(data);
+            toast.success('Chamado criado com sucesso');
             reset();
+            onReset?.();
             (document.getElementById('service-create-modal') as HTMLDialogElement)?.close();
         } catch (error) {
             console.error(error);
-            alert("Erro ao criar chamado.");
+            toast.error('Erro ao criar chamado');
         }
     }
 
@@ -40,6 +46,7 @@ export default function FormServiceCreate() {
         <dialog id="service-create-modal" className="modal">
             <form className="modal-box card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmit)}>
                 <h2 className="text-2xl font-bold text-primary mb-4">Novo Chamado ManuS</h2>
+                
 
                 <Controller
                     control={control}
@@ -71,7 +78,7 @@ export default function FormServiceCreate() {
                     render={({ field, fieldState }) => (
                         <fieldset className="fieldset">
                             <legend className="fieldset-legend">Prazo do Chamado</legend>
-                            <input {...field} type="datetime-local" className="input w-full" placeholder="Prazo do chamado" />
+                            <input {...field} type="date" className="input w-full" placeholder="Prazo do chamado" />
                             {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
                         </fieldset>
                     )}
