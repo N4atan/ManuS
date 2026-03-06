@@ -23,7 +23,7 @@ export default function FormService({ initialData }: Props) {
     } = useForm({
         resolver: zodResolver(schema),
         mode: 'all',
-        defaultValues: (initialData || {}) as any
+        defaultValues: initialData || undefined
     });
 
     useEffect(() => {
@@ -64,94 +64,101 @@ export default function FormService({ initialData }: Props) {
 
     if (!isEditing) {
         return (
-            <form id="service-form" className="card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmitCreate)}>
-                <h2 className="text-2xl font-bold text-primary mb-4">Novo Chamado ManuS</h2>
+            <dialog id="service-form" className="modal">
+                <form id="service-form2" className="modal-box card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmitCreate as unknown as (...args: unknown[]) => void)}>
+                    <h2 className="text-2xl font-bold text-primary mb-4">Novo Chamado ManuS</h2>
 
-                <Controller
-                    control={control}
-                    name="title"
-                    render={({ field, fieldState }) => (
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Título do Chamado *</legend>
-                            <input {...field} type="text" className="input w-full" placeholder="Título do chamado" />
-                            {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
-                        </fieldset>
-                    )}
-                />
+                    <Controller
+                        control={control}
+                        name="title"
+                        render={({ field, fieldState }) => (
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Título do Chamado *</legend>
+                                <input {...field} type="text" className="input w-full" placeholder="Título do chamado" />
+                                {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
+                            </fieldset>
+                        )}
+                    />
 
-                <Controller
-                    control={control}
-                    name="description"
-                    render={({ field, fieldState }) => (
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Descrição do Chamado *</legend>
-                            <textarea {...field} className="textarea h-24 w-full" placeholder="Descreva o problema ou solicitação do chamado"></textarea>
-                            {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
-                        </fieldset>
-                    )}
-                />
+                    <Controller
+                        control={control}
+                        name="description"
+                        render={({ field, fieldState }) => (
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Descrição do Chamado *</legend>
+                                <textarea {...field} className="textarea h-24 w-full" placeholder="Descreva o problema ou solicitação do chamado"></textarea>
+                                {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
+                            </fieldset>
+                        )}
+                    />
 
-                <Controller
-                    control={control}
-                    name="deadline"
-                    render={({ field, fieldState }) => (
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Prazo do Chamado</legend>
-                            <input {...field} type="datetime-local" className="input w-full" placeholder="Prazo do chamado" />
-                            {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
-                        </fieldset>
-                    )}
-                />
+                    <Controller
+                        control={control}
+                        name="deadline"
+                        render={({ field, fieldState }) => (
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Prazo do Chamado</legend>
+                                <input {...field} type="datetime-local" className="input w-full" placeholder="Prazo do chamado" />
+                                {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
+                            </fieldset>
+                        )}
+                    />
 
-                <Controller
-                    control={control}
-                    name="unit"
-                    render={({ field, fieldState }) => (
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Unidade *</legend>
-                            <select {...field} className="select w-full">
-                                <option disabled value="">Selecione a Unidade</option>
-                                <option value="Senac Centro">Senac Centro</option>
-                                <option value="Senac Uni">Senac Uni</option>
-                            </select>
-                            {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
-                        </fieldset>
-                    )}
-                />
+                    <Controller
+                        control={control}
+                        name="unit"
+                        render={({ field, fieldState }) => (
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Unidade *</legend>
+                                <select {...field} className="select w-full">
+                                    <option disabled value="">Selecione a Unidade</option>
+                                    <option value="Senac Centro">Senac Centro</option>
+                                    <option value="Senac Uni">Senac Uni</option>
+                                </select>
+                                {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
+                            </fieldset>
+                        )}
+                    />
 
-                <Controller
-                    control={control}
-                    name="location"
-                    render={({ field, fieldState }) => (
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Localização *</legend>
-                            <input {...field} type="text" className="input w-full" placeholder="Localização (sala/setor)" />
-                            {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
-                        </fieldset>
-                    )}
-                />
+                    <Controller
+                        control={control}
+                        name="location"
+                        render={({ field, fieldState }) => (
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Localização *</legend>
+                                <input {...field} type="text" className="input w-full" placeholder="Localização (sala/setor)" />
+                                {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
+                            </fieldset>
+                        )}
+                    />
 
-                <Controller
-                    control={control}
-                    name="opened_by"
-                    render={({ field, fieldState }) => (
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Identificação de quem Abriu *</legend>
-                            <input {...field} type="text" className="input w-full" placeholder="Nome do usuário que abriu o chamado" />
-                            {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
-                        </fieldset>
-                    )}
-                />
+                    <Controller
+                        control={control}
+                        name="opened_by"
+                        render={({ field, fieldState }) => (
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">Identificação de quem Abriu *</legend>
+                                <input {...field} type="text" className="input w-full" placeholder="Nome do usuário que abriu o chamado" />
+                                {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
+                            </fieldset>
+                        )}
+                    />
 
-                <div className="justify-end card-actions mt-5">
-                    <button type="button" className="btn btn-secondary" onClick={() => reset()}>Limpar</button>
-                    <button type="submit" disabled={!isValid} className="btn btn-primary">Salvar</button>
-                </div>
-            </form>
+                    <div className="justify-end card-actions mt-5">
+                        <button type="button" className="btn btn-secondary" onClick={() => reset()}>Limpar</button>
+                        <button type="submit" disabled={!isValid} className="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+
+            </dialog>
         );
     } else {
         return (
-            <form id="service-form" className="card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmitUpdate)}>
+            <form id="service-form" className="card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmitUpdate as unknown as (...args: unknown[]) => void)}>
                 <h2 className="text-2xl font-bold text-primary mb-4">Editar Chamado ManuS</h2>
 
                 <Controller
@@ -187,7 +194,13 @@ export default function FormService({ initialData }: Props) {
                     render={({ field, fieldState }) => (
                         <fieldset className="fieldset">
                             <legend className="fieldset-legend">Identificação de quem Atendeu</legend>
-                            <input {...field} type="text" className="input w-full" placeholder="Nome do usuário que atendeu o chamado" />
+                            <input 
+                                {...field} 
+                                type="text" 
+                                className="input w-full" 
+                                placeholder="Nome do usuário que atendeu o chamado"
+                                value={field.value ?? ''}
+                            />
                             {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
                         </fieldset>
                     )}
@@ -199,7 +212,13 @@ export default function FormService({ initialData }: Props) {
                     render={({ field, fieldState }) => (
                         <fieldset className="fieldset">
                             <legend className="fieldset-legend">Data de Fechamento</legend>
-                            <input {...field} type="datetime-local" className="input w-full" placeholder="Data de fechamento do chamado" />
+                            <input 
+                                {...field} 
+                                type="datetime-local" 
+                                className="input w-full" 
+                                placeholder="Data de fechamento do chamado"
+                                value={field.value ?? ''}
+                            />
                             {fieldState.error && <p className="text-error">{fieldState.error.message}</p>}
                         </fieldset>
                     )}

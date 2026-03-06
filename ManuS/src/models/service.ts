@@ -1,5 +1,12 @@
-type serviceStatus = "open" | "closed" | "in_progress";
-type serviceUnit = "Senac Centro" | "Senac Unisinos";
+export const ServiceStatus = {
+    Open: "open",
+    Closed: "closed",
+    InProgress: "in_progress"
+} as const;
+
+export type ServiceStatusType = typeof ServiceStatus[keyof typeof ServiceStatus];
+
+export type serviceUnit = "Senac Centro" | "Senac Unisinos";
 
 export type Service = {
     id              : string;
@@ -8,7 +15,7 @@ export type Service = {
     deadline        : string;
     unit            : serviceUnit;
     location        : string;
-    status          : serviceStatus;
+    status          : ServiceStatusType;
     resolution      : string | null;
     opened_by       : string | null;
     closed_by       : string | null;

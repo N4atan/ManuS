@@ -1,10 +1,36 @@
-import { useAuth } from "../contexts/AuthContext";
 
+import { useEffect, useState } from "react";
+import type { Service } from "../models/service";
+import { ServiceStatus } from "../models/service";
+import { readServices } from "../services/apiServices";
+import { CardService } from '../components/Cards/CardService';
+import FormServiceCreate from '../components/Forms/FormServiceCreate';
+import FormServiceEdit from '../components/Forms/FormServiceEdit';
+import { ListHeader } from '../components/ListHeader/ListHeader';
 
 export default function PageServices() {
-    const user = {
-        name: "Natan"
-    }
+    const [services, setServices] = useState<Service[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [selectedService, setSelectedService] = useState<Service | undefined>(undefined);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                setLoading(true);
+
+                const tempData = await readServices();
+
+                setServices(tempData);
+
+            } catch (error) {
+                alert(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadData()
+    }, [])
 
     return (
         <div className="p-5">
@@ -12,112 +38,73 @@ export default function PageServices() {
                 Serviços
             </h1>
 
-            <div className="grid grid-cols-3 justify-items-center">
-                <ul className="list bg-base-100 gap-5">
-                    <li className="list-tem ">
-                        <p className="font-title text-lg font-bold tracking-wid">Lista de Pendência</p>
-
-                        <button className="btn btn-outline btn-accent w-full my-2">
-                            + Adicionar serviço
-                        </button>
-                    </li>
-
-
-                    <li className="list-item">
-                        <div className="card bg-base-100 w-96 shadow-sm rounded-field">
-                            <div className="card-body relative">
-                                <h2 className="card-title">Vazamento de Água</h2>
-                                <p>A torneira da Copa de Funcionários encontra-se vazando água na sua base.</p>
-                                <div className="bt-10 h-10 w-full bg-base-200  flex items-center justify-center ">
-                                    <div className="w-10 rounded-full bg-base-200 flex items-center justify-center">
-                                        <p className="text-xl">{user!.name.split(" ")[0].charAt(0)}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-''
-                    <li className="list-item">
-                        <div className="card bg-base-100 w-96 shadow-sm">
-                            <div className="card-body">
-                                <h2 className="card-title">Card Title</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li className="list-item">
-                        <div className="card bg-base-100 w-96 shadow-sm">
-                            <div className="card-body">
-                                <h2 className="card-title">Card Title</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-
-                <ul className="list bg-base-100 gap-5">
-                    <li className="list-tem ">
-                        <p className="font-title text-lg font-bold tracking-wid">Em andamento</p>
-
-                        <button className="btn btn-outline btn-accent w-full my-2">
-                            + Adicionar serviço
-                        </button>
-                    </li>
-
-                    <li className="list-item">
-                        <div className="card bg-base-100 w-96 shadow-sm">
-                            <div className="card-body">
-                                <h2 className="card-title">Card Title</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li className="list-item">
-                        <div className="card bg-base-100 w-96 shadow-sm">
-                            <div className="card-body">
-                                <h2 className="card-title">Card Title</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-
-                <ul className="list bg-base-100 gap-5">
-                    <li className="list-tem ">
-                        <p className="font-title text-lg font-bold tracking-wid">Em andamento</p>
-
-                        <button className="btn btn-outline btn-accent w-full my-2">
-                            + Adicionar serviço
-                        </button>
-                    </li>
-
-                    <li className="list-item">
-                        <div className="card bg-base-100 w-96 shadow-sm">
-                            <div className="card-body">
-                                <h2 className="card-title">Card Title</h2>
-                                <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">Buy Now</button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+            {loading ? (
+                <p>Carregando...</p>
+            ) : (
+                <div className="grid grid-cols-3 justify-items-center">
+                    <ul className="list bg-base-100 gap-5">
+                        <ListHeader 
+                            title="Lista de Pendência" 
+                            status={ServiceStatus.Open}
+                            onAddClick={() => (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal()}
+                        />
 
 
-            </div>
+                        {services.filter(service => service.status === ServiceStatus.Open).map(service => (
+                            <li key={service.id} className="list-tem ">
+                                <CardService 
+                                    service={service}
+                                    onEdit={(s) => setSelectedService(s)}
+                                />
+                            </li>
+                        ))}
+
+                    </ul>
+
+                    <ul className="list bg-base-100 gap-5">
+                        <ListHeader 
+                            title="Em andamento" 
+                            status={ServiceStatus.InProgress}
+                            onAddClick={() => (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal()}
+                        />
+
+                        {services.filter(service => service.status === ServiceStatus.InProgress).map(service => (
+                            <li key={service.id} className="list-tem ">
+                                <CardService 
+                                    service={service}
+                                    onEdit={(s) => setSelectedService(s)}
+                                />
+                            </li>
+                        ))}
+
+
+                    </ul>
+
+                    <ul className="list bg-base-100 gap-5">
+                        <ListHeader 
+                            title="Concluído" 
+                            status={ServiceStatus.Closed}
+                            onAddClick={() => (document.getElementById('service-create-modal') as HTMLDialogElement)?.showModal()}
+                        />
+
+                        {services.filter(service => service.status === ServiceStatus.Closed).map(service => (
+                            <li key={service.id} className="list-tem ">
+                                <CardService 
+                                    service={service}
+                                    onEdit={(s) => setSelectedService(s)}
+                                />
+                            </li>
+                        ))}
+
+
+                    </ul>
+
+
+                </div>
+            )}
+
+            <FormServiceCreate />
+            <FormServiceEdit service={selectedService} onClose={() => setSelectedService(undefined)} />
         </div>
     )
 

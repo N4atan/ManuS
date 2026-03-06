@@ -13,7 +13,7 @@ export const serviceCreateSchema = z.object({
     unit: z.string().min(1, "A unidade (unidade Senac) é obrigatória"),
     location: z.string().min(1, "O local (sala/setor) é obrigatório"),
 
-    status: z.enum(["pending", "in_progress", "completed"]).default("pending"),
+    status: z.enum(["open", "in_progress", "closed"]).default("open"),
     resolution: z.string().optional(),
 
     opened_by: z.string("E-mail de abertura inválido"),
@@ -26,7 +26,7 @@ export const serviceCreateSchema = z.object({
 // schema para edição: apenas os campos que realmente podem ser mudados
 export const serviceEditSchema = z.object({
     id: z.string(),
-    status: z.enum(["pending", "in_progress", "completed"]),
+    status: z.enum(["open", "in_progress", "closed"]),
     closed_by: z.string().optional().nullable(),
     closed_at: z.string().optional().nullable(),
     resolution: z.string().optional(),

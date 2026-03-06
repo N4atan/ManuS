@@ -6,12 +6,6 @@ import type { Service } from "../models/service";
 export const readServices = async () => {
     const querySnapshot = await getDocs(collection(db, "services"));
 
-    console.log(querySnapshot)
-
-    querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-    });
-
     const servicesList: Service[] = querySnapshot.docs.map(doc => {
         const data = doc.data();
 
@@ -21,7 +15,7 @@ export const readServices = async () => {
         } as Service;
     });
 
-    console.table(servicesList);
+    return servicesList;
 }
 
 export const createService = async (service: Partial<Service>) => {

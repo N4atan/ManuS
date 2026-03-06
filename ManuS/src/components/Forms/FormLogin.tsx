@@ -9,16 +9,16 @@ export default function FormLogin() {
     const [ email, setEmail ] = React.useState("");
 
     return (
-        <div className="card w-96 bg-base-100 card-md shadow-sm mx-auto my-50">
+        <form className="card w-96 bg-base-100 card-md shadow-sm mx-auto my-50">
             <div className="card-body">
                 <h2 className="card-title">Entrar</h2>
 
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">Usuário</legend>
-                    <input 
-                        type="text" 
-                        className="input" 
-                        placeholder="Digite seu nome de usuário" 
+                    <input
+                        type="text"
+                        className="input"
+                        placeholder="Digite seu nome de usuário"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -31,6 +31,6 @@ export default function FormLogin() {
                     </button>
                 </div>
             </div>
-        </div>
+        </form>
     )
 }
