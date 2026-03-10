@@ -69,7 +69,9 @@ export default function FormServiceEdit({ service, onClose, onReset }: FormServi
                 if (data.resolution) update.resolution = data.resolution;
             }
 
-            update.last_modify_by = user?.id;
+            if (user?.id) {
+                update.last_modify_by = user.id;
+            }
             update.updated_at = new Date().toISOString().split('T')[0];
 
             await updateService(data.id, update as Partial<Service>);

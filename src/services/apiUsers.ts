@@ -10,6 +10,7 @@ export const readUsers = async () => {
         const data = doc.data();
 
         return {
+            id: doc.id,
             ...data
         } as User;
     });
@@ -65,6 +66,7 @@ export const readUserByEmail = async (email: string): Promise<User | null> => {
     const data = doc.data();
 
     return {
+        id: doc.id,
         ...data
     } as User;
 }
