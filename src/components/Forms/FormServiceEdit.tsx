@@ -190,7 +190,7 @@ export default function FormServiceEdit({ service, onClose, onReset }: FormServi
                 )}
 
                 <div className="justify-end card-actions mt-5">
-                    <button type='button' className={`btn btn-soft btn-error mr-auto ${service?.opened_by !== user?.id ? 'hidden' : ''}`} onClick={() => onDelete(service?.id || '')}>
+                    <button type='button' className={`btn btn-soft btn-error mr-auto ${service?.opened_by !== user?.email ? 'hidden' : ''}`} onClick={() => onDelete(service?.id || '')}>
                         <FontAwesomeIcon icon={faTrash} />
                     </button>
                     <button type="button" className="btn btn-secondary btn-outline" onClick={() => reset()}>Limpar</button>

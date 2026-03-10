@@ -20,6 +20,13 @@ export const readUsers = async () => {
 
 export const createUser = async (user: Omit<User, 'id'>) => {
     try {
+        const userExists = await readUserByEmail(user.email);
+        if (userExists) {
+            throw new Error("User already exists");
+        }
+
+        user.email = user.email.toLowerCase();
+
         const docRef = await addDoc(collection(db, "users"), user);
         console.log("User created with ID: ", docRef.id);
     } catch (error) {

@@ -25,7 +25,7 @@ export default function FormLogin() {
                         className="input"
                         placeholder="Digite seu nome de usuário"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value.toLowerCase())}
                     />
                     <p className="label">Caso não tenha, entre em contato com a equipe de suporte.</p>
                 </fieldset>
