@@ -26,7 +26,7 @@ export default function FormServiceCreate({ status, onReset }: { status: Service
             deadline: '',
             unit: undefined,
             location: '',
-            opened_by: user?.id,
+            opened_by: user?.email,
             status: status
         }
     });
