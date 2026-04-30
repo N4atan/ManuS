@@ -49,7 +49,7 @@ export default function FormServiceCreate({ status, onReset }: { status: Service
 
     return (
         <dialog id="service-create-modal" className="modal">
-            <form className="modal-box card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmit)}>
+            <form className="modal-box card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 h-[90%] mx-auto my-5" onSubmit={handleSubmit(onSubmit)}>
                 {isMobile && (
                     <button type="button" className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2" onClick={() => {
                         reset();

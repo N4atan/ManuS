@@ -100,12 +100,14 @@ export default function FormServiceEdit({ service, onClose, onReset }: FormServi
 
     return (
         <dialog ref={dialogRef} id="service-form-edit" className="modal" onClose={() => onClose?.()}>
-            <form className="modal-box card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 mx-auto my-5" onSubmit={handleSubmit(onSubmit)}>
+            <form className="modal-box card bg-base-100 shadow-xl p-6 gap-4 border border-base-200 w-96 max-h-[90%] mx-auto my-5" onSubmit={handleSubmit(onSubmit)}>
                 <button type="button" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={() => {
                     reset();
                     onReset?.();
                     dialogRef.current?.close();
                 }}>✕</button>
+
+                
 
                 <h2 className="text-2xl font-bold text-content">Editar Chamado</h2>
                 <p className="text-sm text-content/50 mb-4">Pressione ESC ou clique fora da janela para fechar</p>                <Controller
@@ -188,6 +190,8 @@ export default function FormServiceEdit({ service, onClose, onReset }: FormServi
                         />
                     </>
                 )}
+
+                
 
                 <div className="justify-end card-actions mt-5">
                     <button type='button' className={`btn btn-soft btn-error mr-auto ${service?.opened_by !== user?.email ? 'hidden' : ''}`} onClick={() => onDelete(service?.id || '')}>

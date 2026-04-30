@@ -13,9 +13,9 @@ export const Header = () => {
     return (
         <div className="navbar bg-base-100 shadow-sm">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">
-                    <img src="../../../public/Logo.png" alt="" className="h-full" />
-                </a>
+                <NavLink to="/services" className="btn btn-ghost text-xl">
+                    <img src="./public/Logo.png" alt="" className="h-full" />
+                </NavLink>
             </div>
             <div className="flex gap-2">
 
@@ -28,7 +28,7 @@ export const Header = () => {
                 {user && (
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                            <div className="w-10 rounded-full bg-base-200 flex items-center justify-center">
+                            <div className="w-10 rounded-full  bg-base-200 flex items-center justify-center border border-base-300">
                                 <p className="text-xl">{user.name.split(" ")[0].charAt(0)}</p>
                             </div>
                         </div>

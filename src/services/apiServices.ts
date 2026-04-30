@@ -1,14 +1,18 @@
-import { collection, onSnapshot, getDocs, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, getDocs, addDoc, doc, updateDoc, deleteDoc, query, orderBy} from "firebase/firestore";
 import { db } from "./firebase";
 
 import type { Service } from "../models/service";
 
+
+
 export const readServices = async () => {
     try {
-        const querySnapshot = await getDocs(collection(db, "services"));
+        const querySnapshot = await getDocs(query(collection(db, "services")));
 
         const servicesList: Service[] = querySnapshot.docs.map(doc => {
             const data = doc.data();
+
+            
 
             return {
                 id: doc.id,
@@ -25,11 +29,11 @@ export const readServices = async () => {
 
 export const observeServices = (callback: (services: Service[]) => void) => {
     // onSnapshot cria um Web Socket e fica ouvindo por mudanças
-    const unsubscribe = onSnapshot(collection(db, "services"), (querySnapshot) => {
+    const unsubscribe = onSnapshot(query(collection(db, "services"),orderBy("created_at", 'desc')),(querySnapshot) => {
         const servicesList: Service[] = querySnapshot.docs.map(doc => {
             const data = doc.data();
 
-            data.created_at = data.created_at.split('T')[0];
+            
 
             return {
                 id: doc.id,
@@ -47,6 +51,7 @@ export const observeServices = (callback: (services: Service[]) => void) => {
 
 export const createService = async (service: Partial<Service>) => {
     try {
+
         const docRef = await addDoc(collection(db, "services"), service);
 
         console.log("Service created with ID: ", docRef.id);

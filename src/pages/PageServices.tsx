@@ -21,6 +21,7 @@ export default function PageServices() {
     const { user } = useAuth();
 
 
+
     useEffect(() => {
         setLoading(true);
         // Inicia a observação no Firestore
@@ -29,8 +30,20 @@ export default function PageServices() {
             setLoading(false);
         });
 
+        const handleShortCutAddService = (e: KeyboardEvent) => {
+            if (e.key.toLowerCase() === "n") {
+                e.preventDefault();
+                showModalCreate(ServiceStatus.Open);
+            }
+        }
+
+        window.addEventListener("keydown", handleShortCutAddService);
+
         // Limpa a observação (desconecta) quando o componente for fechado
-        return () => unsubscribe();
+        return () => {
+            unsubscribe();
+            window.removeEventListener("keydown", handleShortCutAddService);
+        };
     }, []);
 
     if (!user) {
@@ -50,7 +63,7 @@ export default function PageServices() {
 
     return (
         <>
-            <div className="p-5">
+            <div className="p-5 bg-base-200">
 
                 {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center pt-10 gap-4">
@@ -60,15 +73,14 @@ export default function PageServices() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-4">
-                        <ul className="hidden lg:block list bg-base-100 gap-12 w-96">
+                        <ul className="hidden lg:block list gap-12 w-96">
                             <ListHeader
                                 title="Lista de Pendência"
-                    
                                 onAddClick={() => showModalCreate(ServiceStatus.Open)}
                             />
 
 
-                            {services.filter(service => service.status === ServiceStatus.Open).map(service => (
+                            {services.filter(service => service.status === ServiceStatus.Open).sort((a, b) => (a.deadline || "").localeCompare(b.deadline || "")).map(service => (
                                 <li key={service.id} className="list-item mb-4">
                                     <CardService
                                         service={service}
@@ -81,7 +93,7 @@ export default function PageServices() {
 
 
 
-                        <ul className="hidden lg:block list bg-base-100 gap-12 w-96">
+                        <ul className="hidden lg:block list gap-12 w-96">
                             <ListHeader
                                 title="Em andamento"
                             />
@@ -100,12 +112,12 @@ export default function PageServices() {
 
 
 
-                        <ul className="hidden lg:block list bg-base-100 gap-12 w-96">
+                        <ul className="hidden lg:block list gap-12 w-96">
                             <ListHeader
                                 title="Concluído"
                             />
 
-                            {services.filter(service => service.status === ServiceStatus.Closed).map(service => (
+                            {services.filter(service => service.status === ServiceStatus.Closed).sort((a, b) => (b.resolved_at || "").localeCompare(a.resolved_at || "")).map(service => (
                                 <li key={service.id} className="list-item mb-4">
                                     <CardService
                                         service={service}

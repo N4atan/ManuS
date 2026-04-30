@@ -15,11 +15,13 @@ export function ListHeader({ title, onAddClick }: ListHeaderProps) {
             </div>
 
             {onAddClick && (
-                <button 
-                    className="btn btn-outline btn-accent w-full my-2"
+                <button
+                    className="btn btn-outline btn-accent w-full my-2 flex items-center justify-between"
                     onClick={onAddClick}
                 >
-                    + Adicionar serviço
+                    <span className="flex-1 text-center">+ Adicionar serviço</span>
+
+                    <kbd className="hidden lg:flex kbd kbd-sm text-neutral">N</kbd>
                 </button>
             )}
         </li>

@@ -1,26 +1,23 @@
-import type { Service } from "../../models/service"
+import { unitBadgeStyleMap, type Service } from "../../models/service"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faCheckCircle } from '@fortawesome/free-regular-svg-icons'
 
 type Props = {
     service: Service;
     onEdit?: (service: Service) => void;
-
 }
+
+
 
 export const CardService = ({ service, onEdit }: Props) => (
     <div
-        className="card bg-base-100 border border-base-300 max-w-96 shadow-sm rounded-field cursor-pointer hover:shadow-lg transition-shadow"
+        className="card bg-base-100 border border-base-300 max-w-96 shadow-sm rounded-box    cursor-pointer hover:shadow-lg transition-shadow"
         onClick={() => onEdit?.(service)}
     >
         <div className="card-body">
-            <div>
-                <div className="badge badge-outline badge-primary mr-5">{service.location}</div>
-                {service.unit === "Senac Centro" ? (
-                    <div className="badge badge-primary">Senac Centro</div>
-                ) : (
-                    <div className="badge badge-secondary">Senac Unisinos</div>
-                )}
+            <div className="flex gap-2 flex-wrap">
+                <div className="badge badge-outline badge-primary ">{service.location}</div>
+                <div className={`badge ${unitBadgeStyleMap[service.unit]}`}>{service.unit}</div>
             </div>
 
             <h2 className="card-title text-xl">

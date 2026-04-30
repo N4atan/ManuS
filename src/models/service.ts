@@ -8,6 +8,11 @@ export type ServiceStatusType = typeof ServiceStatus[keyof typeof ServiceStatus]
 
 export type serviceUnit = "Senac Centro" | "Senac Unisinos";
 
+export const unitBadgeStyleMap = {
+    "Senac Centro": "badge-primary",
+    "Senac Unisinos": "badge-secondary",
+} as const;
+
 export type Service = {
     id              : string;
     title           : string;
