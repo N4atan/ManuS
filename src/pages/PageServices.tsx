@@ -30,19 +30,11 @@ export default function PageServices() {
             setLoading(false);
         });
 
-        const handleShortCutAddService = (e: KeyboardEvent) => {
-            if (e.key.toLowerCase() === "n") {
-                e.preventDefault();
-                showModalCreate(ServiceStatus.Open);
-            }
-        }
-
-        window.addEventListener("keydown", handleShortCutAddService);
+        
 
         // Limpa a observação (desconecta) quando o componente for fechado
         return () => {
             unsubscribe();
-            window.removeEventListener("keydown", handleShortCutAddService);
         };
     }, []);
 

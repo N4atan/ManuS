@@ -21,7 +21,7 @@ export function ListHeader({ title, onAddClick }: ListHeaderProps) {
                 >
                     <span className="flex-1 text-center">+ Adicionar serviço</span>
 
-                    <kbd className="hidden lg:flex kbd kbd-sm text-neutral">N</kbd>
+                    
                 </button>
             )}
         </li>
